@@ -13,12 +13,12 @@
             events :res.data,
           });
           let l=res.data;
-        for (let index = 0; index < l.length; index++) {
-            let op=document.createElement("option")
-            op.value=l[index].title;
-            op.id=l[index].id;
-            document.getElementById("s").appendChild(op);            
-        }
+          l.forEach(element => {
+            o=document.createElement("option")
+            o.value=element.id;
+            o.text=element.start+" : "+element.title;
+            s.appendChild(o);
+          });
           calendar.render();
         });
     });
@@ -28,27 +28,33 @@
             let d=document.getElementById("dat").value;
             axios.post("https://localhost:7164/api/Events",    {         
              "title": v,
-             "start":d } ).then(res=>{console.log(res.data)})   
-             location.reload();//refresh();�� 
-
+             "start":d } ).then(res=>
+             {
+                console.log(res.data);
+                location.reload();
+            })   
         }
+   
         function updateEvent() {
-            console.log("up")
-            let v=document.getElementById("val").value;
+       
+            let id=document.getElementById("s")[document.getElementById("s").selectedIndex].value; 
+             let v=document.getElementById("val").value;
             let d=document.getElementById("dat").value;
-            let id=document.getElementById("s")[document.getElementById("s").selectedIndex].title;
-            axios.put(`https://localhost:7164/api/Events${id}`,{
+            axios.put(`https://localhost:7164/api/Events/${id}`,{  
             "title": v,
-             "start":d } ).then(res=>{console.log(res.data)})
-             location.reload();//refresh();�� 
-
+             "start":d } ).then(res=>
+             {
+                console.log(res.data)
+                location.reload();
+            })
         }
         function deleteEvent() {
             let id=document.getElementById("s")[document.getElementById("s").selectedIndex].value;
-            axios.delete(`https://localhost:7164/api/Events${id}`).then(res=>{console.log(res.data)})
-            location.reload();//refresh();�� 
+            axios.delete(`https://localhost:7164/api/Events/${id}`).then(res=>{
+                console.log(res.data);
+                location.reload();
+            })
         }
-        
 
     </script>
     
@@ -57,9 +63,7 @@
     <button onclick="addEvent()">Add Event</button>
     <input id="dat" type="date" />
     <input id="val" type="text" />
-    <select style="width: fit-content;" id="s" text="��� ���� ������" >
-  
-    </select>
+    <select style="width: 15vw;" id="s"  ></select>
     <button onclick="updateEvent()">Update Event</button>
     <button onclick="deleteEvent()">Delet Event</button>
     <div id='calendar'></div>
